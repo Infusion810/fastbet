@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Ensure useState is imported
+import React, { useState,useEffect } from 'react'; // Ensure useState is imported
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaLock, FaEnvelope, FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -38,7 +38,7 @@ const Logo = styled.div`
 const LoginPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [username, setUsername] = useState(localStorage.getItem('UserNo') || '');
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
@@ -48,7 +48,36 @@ const LoginPage = () => {
   const [isResetFormValid, setIsResetFormValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [username, setUsername] = useState('');
+  const [userNo, setUserNo] = useState('');
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('UserNo'); // Retrieve from LocalStorage
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+  console.log("USErnameNo",username)
 
+  useEffect(() => {
+    const fetchUserNo = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/userLoginUserNo/${username}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setUserNo(data.userNo);
+        } else {
+          console.error('User not found');
+        }
+      } catch (error) {
+        console.error('Error fetching userNo:', error);
+      }
+    };
+
+    if (username) {
+      fetchUserNo();
+    }
+  }, [username]);
   const validateForm = () => {
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isPasswordValid = password.length >= 6;
@@ -68,7 +97,7 @@ const LoginPage = () => {
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/login`, (
         // method: 'POST',
         // headers: { 'Content-Type': 'application/json' },
-         {email:email , password:password} )
+         {userNo:userNo , password:password} )
       );
 
       console.log(response);
@@ -118,7 +147,7 @@ const LoginPage = () => {
 
         {!showForgotPassword ? (
           <>
-            <FormTitle>Login with Email ID</FormTitle>
+            <FormTitle>Login with User ID</FormTitle>
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <form onSubmit={handleSubmit}>
               <FormGroup>
@@ -127,13 +156,10 @@ const LoginPage = () => {
                     <FaEnvelope />
                   </IconWrapper>
                   <Input
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      validateForm();
-                    }}
+                    type="text"
+                    placeholder="UserNo"
+                    value={userNo}
+                    onChange={(e) => setUserNo(e.target.value)}
                     required
                   />
                 </InputGroup>
@@ -150,7 +176,7 @@ const LoginPage = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      validateForm();
+                     
                     }}
                     required
                   />
@@ -164,7 +190,7 @@ const LoginPage = () => {
                 Forgot Password?
               </ForgotPasswordLink>
 
-              <Button type="submit" disabled={!isFormValid}>
+              <Button type="submit">
                 Sign In
               </Button>
             </form>
@@ -228,10 +254,7 @@ const LoginPage = () => {
           </>
         )}
 
-        <div className="footer">
-          Powered by <strong>98fastbet</strong>{' '}
-          <a href="mailto:reddybook.clubofficial@gmail.com">98fastbet.official@gmail.com</a>
-        </div>
+  
       </LoginFormContainer>
     </LoginPageContainer>
   );

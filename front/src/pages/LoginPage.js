@@ -15,8 +15,8 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const isPasswordValid = password.length >= 6;
+    const isEmailValid = /^[A-Za-z\s]{4,}$/.test(email);
+    const isPasswordValid = password.length >= 5;
     const isUsernameValid = username.trim().length > 0;
     setIsFormValid(isEmailValid && isPasswordValid && isUsernameValid);
   }, [username, email, password]);
@@ -33,7 +33,7 @@ const SignupPage = () => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('UserNo', email);
+        localStorage.setItem('UserNo', username);
         setSuccess('User registered successfully!');
         setError('');
         navigate('/login');
@@ -64,7 +64,7 @@ const SignupPage = () => {
               </IconWrapper>
               <Input 
                 type="text" 
-                placeholder="Username" 
+                placeholder="Enter your phone no." 
                 value={username} 
                 onChange={(e) => setUsername(e.target.value)} 
                 required 
@@ -78,8 +78,9 @@ const SignupPage = () => {
                 <FaEnvelope />
               </IconWrapper>
               <Input 
-                type="email" 
-                placeholder="Email Address" 
+               type="text"
+                name="email"
+                placeholder="Enter your name." 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 required 

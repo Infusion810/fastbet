@@ -41,21 +41,21 @@ const io = socketIo(server, {
 });
 
 
-// port = 4000
+port = 5000
 // CORS configuration
 
-// app.use(
-//   cors({
-//     origin: ["https://dynexbet-front.vercel.app", "https://dynexbet-admin.vercel.app"], // Replace '*' with the specific origin(s) you want to allow, e.g., 'https://yourdomain.com'
-//     methods: ['POST', 'GET', 'PUT', 'DELETE'], // Define allowed HTTP methods
-//     credentials: true, // Allow credentials like cookies to be sent
-//   })
-// );
+app.use(
+  cors({
+    origin: ["https://www.98fastbet.com", "https://admin.98fastbet.com"], // Replace '*' with the specific origin(s) you want to allow, e.g., 'https://yourdomain.com'
+    methods: ['POST', 'GET', 'PUT', 'DELETE'], // Define allowed HTTP methods
+    credentials: true, // Allow credentials like cookies to be sent
+  })
+);
 app.use(cors());
 
 const MONGO_URI = process.env.mongodb_url;   
 // MongoDB connection
-mongoose.connect(`mongodb://localhost:27017/fastbet`)
+mongoose.connect(`mongodb+srv://siddharthojha421:yPlKyyZpefa9Y5lJ@cluster0.rtjwl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
   .then(() => console.log("MongoDB Connected Successfully!"))
   .catch(err => console.error("MongoDB Connection Error:", err));
 
@@ -400,12 +400,12 @@ app.post('/api/signup', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // let userNo;
-    // let count = 5000;
-    // do {
-    //   userNo = `C${count}`;
-    //   count++;
-    // } while (await User.findOne({ userNo }));
+    let userNo;
+    let count = 5000;
+    do {
+      userNo = `C${count}`;
+      count++;
+    } while (await User.findOne({ userNo }));
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -415,7 +415,7 @@ app.post('/api/signup', async (req, res) => {
       username,
       email,
       password: hashedPassword,
- 
+      userNo,
     });
 
     const savedUser = await newUser.save();
@@ -434,7 +434,7 @@ app.post('/api/signup', async (req, res) => {
     // Respond with success
     res.status(201).json({
       message: 'User registered successfully',
-      user: { id: savedUser._id, username: savedUser.username, email: savedUser.email },
+      user: { id: savedUser._id, username: savedUser.username, email: savedUser.email ,userNo:savedUser.userNo},
     });
   } catch (err) {
     console.error(err);
@@ -444,14 +444,14 @@ app.post('/api/signup', async (req, res) => {
 
 // Login Route
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { userNo, password } = req.body;
 
-  if (!email || !password) {
+  if (!userNo || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
 
   try {
-    const user = await User.findOne({ email }).populate('wallet');
+    const user = await User.findOne({ userNo }).populate('wallet');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -471,7 +471,7 @@ app.post('/api/login', async (req, res) => {
         username: user.username,
         email: user.email,
         walletBalance: user.wallet?.balance || 0,
-      
+        userNo:user.userNo,
       },
     });
   } catch (err) {
@@ -624,7 +624,7 @@ io.on("connection", (socket) => {
 });
 
 
-const PORT = process.env.PORT || 4000;
-server.listen(process.env.PORT || 4000, () => {
-  console.log('Server started on port 4000');
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server started on port ${PORT}`);
 });

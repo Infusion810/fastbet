@@ -75,10 +75,12 @@ const Header = () => {
                   <FaUser className="auth-icon" />
                   <span>{profile.username}</span>
                 </div>
+          
                 <div className="wallet-component">
                   <FaWallet className="auth-icon" />
                   <span>₹{profile.walletBalance}</span>
                 </div>
+              
                 <button className="login-btn" onClick={handleLogout}>
                   <FaSignOutAlt /> Logout
                 </button>
