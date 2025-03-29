@@ -164,7 +164,8 @@ const TableCell = styled.td`
   margin: auto;
 
   @media (max-width: 768px) {
-    padding: 8px;
+      padding: 1px;
+     border: 1px solid #f3ebeb;
   }
 `;
 
