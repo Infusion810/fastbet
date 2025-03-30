@@ -108,8 +108,8 @@ const T20Content = () => {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/getwalletandexposure/${userId}`);
       setBalance(response.data.balance);
       setMarketOddsExposure(response.data.exposureBalance)
-      setTeam1Winnings(response.data.teamAProfit)
-      setTeam2Winnings(response.data.teamBProfit)
+      // setTeam1Winnings(response.data.teamAProfit)
+      // setTeam2Winnings(response.data.teamBProfit)
     
       console.log(response.data)
     } catch (err) {
