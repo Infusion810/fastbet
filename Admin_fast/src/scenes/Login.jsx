@@ -13,7 +13,7 @@ function Login({ setIsAuthenticated }) {
         e.preventDefault();
 
         // Hardcoded login for testing (Replace this with actual API)
-        if (email === "reddy@gmail.com" && password === "reddy@123") {
+        if (email === "fastbet@gmail.com" && password === "fastbet@123") {
             localStorage.setItem("isAuthenticated", "true");
             localStorage.setItem("email" ,email);
             setIsAuthenticated(true);
