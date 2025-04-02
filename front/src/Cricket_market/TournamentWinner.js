@@ -154,6 +154,7 @@ const TableHeader = styled.th`
   @media (max-width: 768px) {
     padding: 8px;
     font-size: 12px;
+            border: 1px solid #dfdada;
   }
 `;
 
