@@ -5,7 +5,7 @@ import BettingContext from "../context/BettingContext";
 import { OverMarketContext } from "../context/OverMarketContext";
 
 // Styled Components
-const SuccessPopupOverlay = styled.div`
+const SuccessPopupOverlay = styled.div` 
   position: fixed;
   top: 20px;
   right: 20px;
